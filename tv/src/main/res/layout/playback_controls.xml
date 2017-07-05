@@ -26,7 +26,7 @@
 
     <fragment
         android:id="@+id/playback_controls_fragment"
-        class = "com.trycorecoach.corecoachtv.PlaybackOverlayFragment"
+        android:name= "com.trycorecoach.corecoachtv.PlaybackOverlayFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

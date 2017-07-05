@@ -127,7 +127,6 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         });
     }
 
-
     @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity context) {
@@ -184,9 +183,11 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 
     public void fastForwardAction() {
         PlaybackOverlayActivity playbackOverlayActivity = (PlaybackOverlayActivity) getActivity();
+        int fiveSeconds = 5 * 1000;
+        int currentTime = mPlaybackControlsRow.getCurrentTime();
 
-        if (mPlaybackControlsRow.getCurrentTime() < (getDuration() - (5 * 1000))) {
-            mPlaybackControlsRow.setCurrentTime(mPlaybackControlsRow.getCurrentTime() + (5 * 1000));
+        if (currentTime < (getDuration() - fiveSeconds)) {
+            mPlaybackControlsRow.setCurrentTime(currentTime + fiveSeconds);
         } else {
             mPlaybackControlsRow.setCurrentTime(getDuration());
         }
@@ -195,11 +196,13 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 
     public void rewindAction() {
         PlaybackOverlayActivity playbackOverlayActivity = (PlaybackOverlayActivity) getActivity();
+        int fiveSeconds = 5 * 1000;
+        int currentTime = mPlaybackControlsRow.getCurrentTime();
 
-        if (mPlaybackControlsRow.getCurrentTime() > 0 && mPlaybackControlsRow.getCurrentTime() > (5 * 1000)) {
-            mPlaybackControlsRow.setCurrentTime(mPlaybackControlsRow.getCurrentTime() - (5 * 1000));
+        if (currentTime > 0 && currentTime > fiveSeconds) {
+            mPlaybackControlsRow.setCurrentTime(currentTime - fiveSeconds);
 
-        } else if(mPlaybackControlsRow.getCurrentTime() > 0 && mPlaybackControlsRow.getCurrentTime() < (5 * 1001)) {
+        } else if(currentTime > 0 && currentTime <= fiveSeconds) {
             mPlaybackControlsRow.setCurrentTime(0);
         }
         playbackOverlayActivity.videoSeeker();
@@ -245,13 +248,13 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
 
     public void togglePlayback(boolean playPause) {
         if (playPause) {
-            startProgressAutomation();
+//            startProgressAutomation();
             setFadingEnabled(true);
             mCallback.onFragmentPlayPause(mItems.get(mCurrentItem),
                     mPlaybackControlsRow.getCurrentTime(), true);
             mPlayPauseAction.setIcon(mPlayPauseAction.getDrawable(PlayPauseAction.PAUSE));
         } else {
-            stopProgressAutomation();
+//            stopProgressAutomation();
             setFadingEnabled(false);
             mCallback.onFragmentPlayPause(mItems.get(mCurrentItem),
                     mPlaybackControlsRow.getCurrentTime(), false);
@@ -281,7 +284,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         } else {
             mPlaybackControlsRow = new PlaybackControlsRow();
         }
-        mRowsAdapter.add(mPlaybackControlsRow);
+        mRowsAdapter.add(0, mPlaybackControlsRow);
 
         updatePlaybackRow(mCurrentItem);
 
@@ -300,17 +303,17 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         //
 
         mPrimaryActionsAdapter.add(mSkipPreviousAction);
-//        if (PRIMARY_CONTROLS > 3) {
-//            // Сomment later
-////            mPrimaryActionsAdapter.add(mRewindAction);
-//            //
-//        }
+        if (PRIMARY_CONTROLS > 3) {
+            // Сomment later
+//            mPrimaryActionsAdapter.add(mRewindAction);
+            //
+        }
         mPrimaryActionsAdapter.add(mPlayPauseAction);
-//        if (PRIMARY_CONTROLS > 3) {
-//            // Сomment later
-////            mPrimaryActionsAdapter.add(new PlaybackControlsRow.FastForwardAction(getActivity()));
-//            //
-//        }
+        if (PRIMARY_CONTROLS > 3) {
+            // Сomment later
+//            mPrimaryActionsAdapter.add(new PlaybackControlsRow.FastForwardAction(getActivity()));
+            //
+        }
         mPrimaryActionsAdapter.add(mSkipNextAction);
     }
 
@@ -374,15 +377,26 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         mHandler.postDelayed(mRunnable, getUpdatePeriod());
     }
 
+    public void stopProgressAutomation() {
+        if (mHandler != null && mRunnable != null) {
+            mHandler.removeCallbacks(mRunnable);
+        }
+    }
+
     public void next() {
         if (++mCurrentItem >= mItems.size()) {
             mCurrentItem = 0;
         }
-        if (mPlayPauseAction.getIndex() == PlayPauseAction.PLAY) {
-            mCallback.onFragmentPlayPause(mItems.get(mCurrentItem), 0, false);
-        } else {
-            mCallback.onFragmentPlayPause(mItems.get(mCurrentItem), 0, true);
-        }
+//        if (mPlayPauseAction.getIndex() == PlayPauseAction.PLAY) {
+//        } else {
+//            mCallback.onFragmentPlayPause(mItems.get(mCurrentItem), 0, true);
+//        }
+        stop();
+//        mPlayPauseAction.setIcon(mPlayPauseAction.getDrawable(PlayPauseAction.PLAY));
+//        notifyChanged(mPlayPauseAction);
+
+//        togglePlayback(mPlayPauseAction.getIndex() == PlayPauseAction.PLAY);
+
         updatePlaybackRow(mCurrentItem);
     }
 
@@ -390,18 +404,12 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         if (--mCurrentItem < 0) {
             mCurrentItem = mItems.size() - 1;
         }
-        if (mPlayPauseAction.getIndex() == PlayPauseAction.PLAY) {
+//        if (mPlayPauseAction.getIndex() == PlayPauseAction.PLAY) {
             mCallback.onFragmentPlayPause(mItems.get(mCurrentItem), 0, false);
-        } else {
-            mCallback.onFragmentPlayPause(mItems.get(mCurrentItem), 0, true);
-        }
+//        } else {
+//            mCallback.onFragmentPlayPause(mItems.get(mCurrentItem), 0, true);
+//        }
         updatePlaybackRow(mCurrentItem);
-    }
-
-    private void stopProgressAutomation() {
-        if (mHandler != null && mRunnable != null) {
-            mHandler.removeCallbacks(mRunnable);
-        }
     }
 
     @Override

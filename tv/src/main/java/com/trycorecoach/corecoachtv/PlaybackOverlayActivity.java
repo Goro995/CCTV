@@ -44,8 +44,11 @@ public class PlaybackOverlayActivity extends FragmentActivity implements
         mSession.setCallback(new MediaSessionCallback());
         mSession.setFlags(MediaSession.FLAG_HANDLES_MEDIA_BUTTONS |
                 MediaSession.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
         mSession.setActive(true);
+
+//        playbackOverlayFragment.togglePlayback(true);
+//        PlaybackOverlayFragment playbackOverlayFragment = (PlaybackOverlayFragment) getFragmentManager().findFragmentById(R.id.playback_controls_fragment);
+//        playbackOverlayFragment.startProgressAutomation();
     }
 
 
@@ -67,7 +70,7 @@ public class PlaybackOverlayActivity extends FragmentActivity implements
         switch (keyCode) {
             case KeyEvent.KEYCODE_MEDIA_PLAY:
                 if (mPlaybackState != LeanbackPlaybackState.PLAYING) {
-                    playbackOverlayFragment.togglePlayback(true);
+                    playbackOverlayFragment.togglePlayback(false);
                 }
                 return true;
             case KeyEvent.KEYCODE_MEDIA_PAUSE:
@@ -111,30 +114,39 @@ public class PlaybackOverlayActivity extends FragmentActivity implements
         mVideoView.seekTo(0);
     }
 
+    public PlaybackOverlayFragment getFragment() {
+        PlaybackOverlayFragment playbackOverlayFragment = (PlaybackOverlayFragment) getFragmentManager().findFragmentById(R.id.playback_controls_fragment);
+        return playbackOverlayFragment;
+    }
+
     /**
      * Implementation of OnPlayPauseClickedListener
      */
     public void onFragmentPlayPause(Exercise exercise, int position, Boolean playPause) {
 
-        String pathToVideo = DataManager.buildURLforContent(exercise.getVideoURL());
-        mVideoView.setVideoPath(pathToVideo);
+        PlaybackOverlayFragment playbackOverlayFragment = (PlaybackOverlayFragment) getFragmentManager().findFragmentById(R.id.playback_controls_fragment);
+
+        Log.d(TAG, "mPlaybackState: " + mPlaybackState);
+        Log.d(TAG, "playPause: " + playPause);
 
         if (position == 0 || mPlaybackState == LeanbackPlaybackState.IDLE) {
             setupCallbacks();
             mPlaybackState = LeanbackPlaybackState.IDLE;
         }
-
         if (playPause && mPlaybackState != LeanbackPlaybackState.PLAYING) {
             mPlaybackState = LeanbackPlaybackState.PLAYING;
-            if (position > 0) {
+            if (position >= 0) {
                 mVideoView.seekTo(position);
                 mVideoView.start();
-//                PlaybackOverlayFragment playbackOverlayFragment = new PlaybackOverlayFragment();
-//                playbackOverlayFragment.startProgressAutomation();
+                playbackOverlayFragment.startProgressAutomation();
+                Log.d(TAG, "PLAYING");
             }
         } else {
             mPlaybackState = LeanbackPlaybackState.PAUSED;
             mVideoView.pause();
+            playbackOverlayFragment.stopProgressAutomation();
+            Log.d(TAG, "PAUSED");
+
         }
         updatePlaybackState(position);
         updateMetadata(exercise);
@@ -192,8 +204,13 @@ public class PlaybackOverlayActivity extends FragmentActivity implements
 
     private void loadViews() {
         mVideoView = (VideoView) findViewById(R.id.videoView);
+        Exercise mSelectedExercise = (Exercise) this
+                .getIntent().getSerializableExtra(DetailsActivity.EXERCISE);
+        String pathToVideo = DataManager.buildURLforContent(mSelectedExercise.getVideoURL());
+        mVideoView.setVideoPath(pathToVideo);
         mVideoView.setFocusable(false);
         mVideoView.setFocusableInTouchMode(false);
+
     }
 
     private void setupCallbacks() {

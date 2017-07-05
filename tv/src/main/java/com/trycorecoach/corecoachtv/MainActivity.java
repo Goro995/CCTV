@@ -15,39 +15,12 @@
 package com.trycorecoach.corecoachtv;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.trycorecoach.corecoachtv.lists.Exercise;
-import com.trycorecoach.corecoachtv.lists.Section;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 
 /*
  * MainActivity class that loads MainFragment
  */
 public class MainActivity extends Activity {
-
-    public SharedPreferences sharedPreferences;
-
-    // Keys for sections and exercises saved in sharedpreferences
-    public final String SECTION_KEY = "SECTION_KEY";
-    public final String EXERCISE_KEY = "EXERCISE_KEY";
-
-    final String TAG = "MainActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
