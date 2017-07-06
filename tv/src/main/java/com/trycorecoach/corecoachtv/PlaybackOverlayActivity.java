@@ -70,7 +70,7 @@ public class PlaybackOverlayActivity extends FragmentActivity implements
         switch (keyCode) {
             case KeyEvent.KEYCODE_MEDIA_PLAY:
                 if (mPlaybackState != LeanbackPlaybackState.PLAYING) {
-                    playbackOverlayFragment.togglePlayback(false);
+                    playbackOverlayFragment.togglePlayback(true);
                 }
                 return true;
             case KeyEvent.KEYCODE_MEDIA_PAUSE:
@@ -210,7 +210,6 @@ public class PlaybackOverlayActivity extends FragmentActivity implements
         mVideoView.setVideoPath(pathToVideo);
         mVideoView.setFocusable(false);
         mVideoView.setFocusableInTouchMode(false);
-
     }
 
     private void setupCallbacks() {
