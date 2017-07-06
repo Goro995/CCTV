@@ -279,12 +279,8 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
     }
 
     private void addPlaybackControlsRow() {
-        if (SHOW_DETAIL) {
-            mPlaybackControlsRow = new PlaybackControlsRow(mSelectedExercise);
-        } else {
-            mPlaybackControlsRow = new PlaybackControlsRow();
-        }
-        mRowsAdapter.add(0, mPlaybackControlsRow);
+        mPlaybackControlsRow = new PlaybackControlsRow(mSelectedExercise);
+        mRowsAdapter.add(mPlaybackControlsRow);
 
         updatePlaybackRow(mCurrentItem);
 
