@@ -219,33 +219,6 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         return mPlaybackControlsRow.getCurrentTime();
     }
 
-//    public void togglePlaybackCaller(Context context, Activity activity) {
-//
-//        getArrayLists(context, activity);
-//       togglePlayback(true);
-//    }
-//
-//    public ArrayList<Exercise> getArrayLists(Context context, Activity activity) {
-//
-//        ArrayList<Exercise> loadedExercises =  DataManager.readExercisesFromSharedPreferences(context);
-//        List<Exercise> exercises = new ArrayList<Exercise>();
-//
-//        mSelectedExercise = (Exercise) activity
-//                .getIntent().getSerializableExtra(DetailsActivity.EXERCISE);
-//
-//        for (Exercise exercise: loadedExercises) {
-//            exercises.add(exercise);
-//        }
-//
-//        for (int j = 0; j < exercises.size(); j++) {
-//            mItems.add(exercises.get(j));
-//            if (mSelectedExercise.getTitle().contentEquals(exercises.get(j).getTitle())) {
-//                mCurrentItem = j;
-//            }
-//        }
-//        return mItems;
-//    }
-
     public void togglePlayback(boolean playPause) {
         if (playPause) {
 //            startProgressAutomation();
