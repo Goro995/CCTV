@@ -163,7 +163,7 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
                 } else if (action.getId() == mRewindAction.getId()) {
                         rewindAction();
                 }
-                if (action instanceof PlaybackControlsRow.MultiAction) {
+                if (action instanceof PlaybackControlsRow.MultiAction && !(action instanceof FastForwardAction) && !(action instanceof RewindAction)) {
                     ((PlaybackControlsRow.MultiAction) action).nextIndex();
                     notifyChanged(action);
                 }
@@ -191,6 +191,8 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         } else {
             mPlaybackControlsRow.setCurrentTime(getDuration());
         }
+//        mFastForwardAction = new FastForwardAction(getActivity());
+//        mPlaybackControlsRow.
         playbackOverlayActivity.videoSeeker();
     }
 
@@ -267,20 +269,20 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         mSkipPreviousAction = new PlaybackControlsRow.SkipPreviousAction(getActivity());
 
         // Сomment later
-//        mFastForwardAction = new PlaybackControlsRow.FastForwardAction(getActivity());
-//        mRewindAction = new PlaybackControlsRow.RewindAction(getActivity());
+        mFastForwardAction = new PlaybackControlsRow.FastForwardAction(getActivity());
+        mRewindAction = new PlaybackControlsRow.RewindAction(getActivity());
         //
 
         mPrimaryActionsAdapter.add(mSkipPreviousAction);
         if (PRIMARY_CONTROLS > 3) {
             // Сomment later
-//            mPrimaryActionsAdapter.add(mRewindAction);
+            mPrimaryActionsAdapter.add(mRewindAction);
             //
         }
         mPrimaryActionsAdapter.add(mPlayPauseAction);
         if (PRIMARY_CONTROLS > 3) {
             // Сomment later
-//            mPrimaryActionsAdapter.add(new PlaybackControlsRow.FastForwardAction(getActivity()));
+            mPrimaryActionsAdapter.add(new PlaybackControlsRow.FastForwardAction(getActivity()));
             //
         }
         mPrimaryActionsAdapter.add(mSkipNextAction);
@@ -357,10 +359,14 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
             mCurrentItem = 0;
         }
 //        if (mPlayPauseAction.getIndex() == PlayPauseAction.PLAY) {
+            mCallback.onFragmentPlayPause(mItems.get(mCurrentItem), 0, false);
+        mPlayPauseAction.nextIndex();
+
 //        } else {
 //            mCallback.onFragmentPlayPause(mItems.get(mCurrentItem), 0, true);
 //        }
-        stop();
+
+//        stop();
 //        mPlayPauseAction.setIcon(mPlayPauseAction.getDrawable(PlayPauseAction.PLAY));
 //        notifyChanged(mPlayPauseAction);
 
@@ -375,6 +381,8 @@ public class PlaybackOverlayFragment extends android.support.v17.leanback.app.Pl
         }
 //        if (mPlayPauseAction.getIndex() == PlayPauseAction.PLAY) {
             mCallback.onFragmentPlayPause(mItems.get(mCurrentItem), 0, false);
+        mPlayPauseAction.nextIndex();
+
 //        } else {
 //            mCallback.onFragmentPlayPause(mItems.get(mCurrentItem), 0, true);
 //        }
